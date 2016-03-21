@@ -1,14 +1,18 @@
 package my.cy.android_magic_8_ball;
 
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,29 +27,68 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        String name = "CY Lim";
-        Double age = Double.valueOf(22);
+        //Set up relative layout
+        RelativeLayout rLayout = new RelativeLayout(this);
+        rLayout.setLayoutParams(new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT));
 
-        Log.i("1", "CY Lim");
-        Log.i("1", String.format("%.2f", age));
-        Log.i("1", name);
+        //Set up editText
+        RelativeLayout.LayoutParams questionEditTextParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        questionEditTextParams.setMargins(20,20,20,20);
+        questionEditTextParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+        questionEditTextParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+
+        questionEditText = new EditText(this);
+        questionEditText.setHint("Ask a question...");
+        questionEditText.setSingleLine(true);
+        questionEditText.setLayoutParams(questionEditTextParams);
+
+        // Setup for imageView
+        RelativeLayout.LayoutParams imageBallParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        imageBallParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+
+        imageBall = new ImageView(this);
+        imageBall.setLayoutParams(imageBallParams);
+
+        // Setup for TextView
+        RelativeLayout.LayoutParams answerTextViewParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        answerTextViewParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+
+        answerTextView = new TextView(this);
+        answerTextView.setTextColor(Color.WHITE);
+        answerTextView.setLayoutParams(answerTextViewParams);
+
+        //Setup shake button
+        RelativeLayout.LayoutParams buttonParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT);
+        buttonParams.height = 150;
+        buttonParams.setMargins(0,20,0,0);
+        buttonParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+        buttonParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+
+        shakeButton = new Button(this);
+        shakeButton.setText("SHAKE");
+        shakeButton.setLayoutParams(buttonParams);
+
+        // Add to view
+        rLayout.addView(questionEditText);
+        rLayout.addView(imageBall);
+        rLayout.addView(answerTextView);
+        rLayout.addView(shakeButton);
+
+        setContentView(rLayout);
 
         String[] responses = {"Very doubtful", "You may rely on it", getEmojiByUnicode(0x1F44D)};
         ball = new MagicEightBallModel(responses);
-        System.out.println(ball);
-
-        ball.responseToQuestion("Will I get full marks for this lab");
-        ball.responseToQuestion("Will the Cronulla sharks receive a premiership this year");
-        ball.responseToQuestion("Will I end up becoming a cat person when I get old");
-
-
-        // Lab 2
-        questionEditText = (EditText) this.findViewById(R.id.questionEditText);
-        imageBall = (ImageView) this.findViewById(R.id.imageViewBall);
-        answerTextView = (TextView) this.findViewById(R.id.answerTextView);
-        shakeButton = (Button) this.findViewById(R.id.shakeButton);
 
         imageBall.setAlpha(0.0f);
 
