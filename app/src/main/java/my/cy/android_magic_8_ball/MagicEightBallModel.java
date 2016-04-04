@@ -9,9 +9,6 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Collections;
 
-/**
- * Created by cylim on 7/03/2016.
- */
 public class MagicEightBallModel extends Object {
 
     private static String[] initialResponseArray = {"My sources say no", "It is certain"};
