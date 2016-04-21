@@ -1,10 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Magic 8 Ball</string>
 
-    <string name="history">History</string>
-    <string name="textPlaceholder">Ask a question</string>
-    <string name="response0">My sources say no</string>
-    <string name="response1">It is certain</string>
+    <string name="history">历史</string>
+    <string name="textPlaceholder">在此输入问题</string>
+    <string name="response0">我的线人说不行</string>
+    <string name="response1">肯定的</string>
 
     <array name="ballImages">
         <item>@drawable/circle1</item>

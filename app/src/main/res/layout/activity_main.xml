@@ -12,7 +12,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:id="@+id/questionEditText"
-        android:hint="Ask a question..."
+        android:hint="@string/textPlaceholder"
         android:singleLine="true"/>
 
     <ImageView
@@ -35,7 +35,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="55dp"
-        android:text="History"
+        android:text="@string/history"
         android:id="@+id/shakeButton"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/shakebutton"

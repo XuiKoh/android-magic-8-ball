@@ -2,9 +2,9 @@ package my.cy.android_magic_8_ball;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.media.MediaPlayer;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import java.io.FileInputStream;
@@ -21,8 +22,11 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+
+    TextToSpeech textToSpeech;
 
     EditText questionEditText;
     ImageView imageBall;
@@ -31,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     MagicEightBallModel ball;
 
-    ArrayList<QuestionResponseModel> historyList = new ArrayList<>();;
+    ArrayList<QuestionResponseModel> historyList = new ArrayList<>();
     String fileName = "historyData.bin";
 
     @Override
@@ -48,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 //        Log.i("1", name);
 //
         String[] responses = {getEmojiByUnicode(0x1F44D)};
-        ball = new MagicEightBallModel(responses);
+        ball = new MagicEightBallModel(this, responses);
 //        System.out.println(ball);
 //
 //        ball.responseToQuestion("Will I get full marks for this lab");
@@ -89,11 +93,14 @@ public class MainActivity extends AppCompatActivity {
         // Lab 4.5
         historyList = loadSerializedObject(this);
         Log.i("QuestionResponseModel", historyList.toString());
+
+        // Lab 7
+        textToSpeech = new TextToSpeech(this, null);
     }
 
     private void getAnswer() {
         final TypedArray ballImages = getResources().obtainTypedArray(R.array.ballImages);
-        final TypedArray audio = getResources().obtainTypedArray(R.array.audio);
+
 
         imageBall.setAlpha(0.0f);
 
@@ -115,18 +122,33 @@ public class MainActivity extends AppCompatActivity {
         historyList.add(new QuestionResponseModel(questionText, answerText));
         Log.i("QuestionResponseModel", historyList.toString());
 
-
         // Lab 4.4
         saveObject(this);
 
+        // Lab 6 and 7
+        playSound(responseNum);
 
-        // Lab 6
-        int audioID = audio.getResourceId(responseNum, -1);
-        MediaPlayer mp = MediaPlayer.create(this, audioID);
-        try {
-            mp.start();
-        } catch (Exception e) {
-            e.printStackTrace();
+        ballImages.recycle();
+    }
+
+    private void playSound(Integer responseNum){
+        if(responseNum > 1){
+            // Lab 6
+            final TypedArray audio = getResources().obtainTypedArray(R.array.audio);
+            int audioID = audio.getResourceId(responseNum, -1);
+            MediaPlayer mp = MediaPlayer.create(this, audioID);
+            try {
+                mp.start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            audio.recycle();
+        } else {
+            // Lab 7
+            // Default TTS engine doesn't support Chinese, I added German as a backup language
+            textToSpeech.setLanguage(Locale.getDefault());
+            textToSpeech.speak(answerTextView.getText().toString(), TextToSpeech.QUEUE_FLUSH, null, null);
+
         }
 
     }
@@ -136,9 +158,9 @@ public class MainActivity extends AppCompatActivity {
         try {
             FileOutputStream fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(historyList); // write the class as an 'object'
-            objectOutputStream.flush(); // flush the stream to insure all of the information was written to 'save_object.bin'
-            objectOutputStream.close();// close the stream
+            objectOutputStream.writeObject(historyList);    // write the class as an 'object'
+            objectOutputStream.flush();                     // flush the stream to insure all of the information was written to 'save_object.bin'
+            objectOutputStream.close();                     // close the stream
         } catch (Exception ex) {
             Log.v("Error : ", ex.getMessage());
             ex.printStackTrace();

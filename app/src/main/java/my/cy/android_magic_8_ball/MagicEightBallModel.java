@@ -5,9 +5,6 @@ package my.cy.android_magic_8_ball;
  */
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
-import android.media.MediaPlayer;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -15,22 +12,21 @@ import java.util.Collections;
 
 public class MagicEightBallModel extends Object {
 
-    private static String[] initialResponseArray = {"My sources say no", "It is certain"};
     private ArrayList<String> responseArray;
+
+    private Context context;
+
+    public MagicEightBallModel(Context context, String[] extraResponseArray){
+        this.context = context;
+
+        responseArray = new ArrayList<>();
+        String[] initialResponseArray = {context.getResources().getString(R.string.response0), context.getResources().getString(R.string.response1)};
+        Collections.addAll(responseArray, initialResponseArray);
+        Collections.addAll(responseArray, extraResponseArray);
+    }
 
     public String getResponse(Integer index) {
         return responseArray.get(index);
-    }
-
-    public MagicEightBallModel(){
-        responseArray = new ArrayList<String>();
-        Collections.addAll(responseArray, initialResponseArray);
-    }
-
-    public MagicEightBallModel(String[] extraResponseArray){
-        responseArray = new ArrayList<String>();
-        Collections.addAll(responseArray, initialResponseArray);
-        Collections.addAll(responseArray, extraResponseArray);
     }
 
     public Integer responseToQuestion(String question) {
