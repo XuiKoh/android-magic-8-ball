@@ -2,7 +2,9 @@ package my.cy.android_magic_8_ball;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     MagicEightBallModel ball;
 
-    ArrayList<QuestionResponseModel> historyList = new ArrayList<QuestionResponseModel>();
+    ArrayList<QuestionResponseModel> historyList = new ArrayList<>();;
     String fileName = "historyData.bin";
 
     @Override
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 //        Log.i("1", String.format("%.2f", age));
 //        Log.i("1", name);
 //
-        String[] responses = {"Very doubtful", "You may rely on it", getEmojiByUnicode(0x1F44D)};
+        String[] responses = {getEmojiByUnicode(0x1F44D)};
         ball = new MagicEightBallModel(responses);
 //        System.out.println(ball);
 //
@@ -91,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getAnswer() {
         final TypedArray ballImages = getResources().obtainTypedArray(R.array.ballImages);
+        final TypedArray audio = getResources().obtainTypedArray(R.array.audio);
 
         imageBall.setAlpha(0.0f);
 
@@ -100,8 +103,12 @@ public class MainActivity extends AppCompatActivity {
 
         imageBall.animate().alpha(1.0f).setDuration(1000);
 
+
+
         String questionText = questionEditText.getText().toString();
-        String answerText = ball.responseToQuestion(questionText);
+
+        Integer responseNum = ball.responseToQuestion(questionText);
+        String answerText = ball.getResponse(responseNum);
         answerTextView.setText(answerText);
 
         // Lab 4.3
@@ -111,6 +118,17 @@ public class MainActivity extends AppCompatActivity {
 
         // Lab 4.4
         saveObject(this);
+
+
+        // Lab 6
+        int audioID = audio.getResourceId(responseNum, -1);
+        MediaPlayer mp = MediaPlayer.create(this, audioID);
+        try {
+            mp.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     // Lab 4.4

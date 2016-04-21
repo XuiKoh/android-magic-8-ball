@@ -9,4 +9,11 @@
         <item>@drawable/circle5</item>
         <item>@drawable/circle6</item>
     </array>
+
+    <array name="audio">
+        <item>@raw/audio0</item>
+        <item>@raw/audio1</item>
+        <item>@raw/audio2</item>
+        <item>@raw/audio3</item>
+    </array>
 </resources>

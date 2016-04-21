@@ -3,7 +3,6 @@ package my.cy.android_magic_8_ball;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
  */
 public class HistoryActivity extends AppCompatActivity {
 
-    ArrayList<QuestionResponseModel> historyList = new ArrayList<QuestionResponseModel>();
+    ArrayList<QuestionResponseModel> historyList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
