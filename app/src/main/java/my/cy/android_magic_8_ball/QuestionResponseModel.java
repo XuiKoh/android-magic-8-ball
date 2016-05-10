@@ -11,10 +11,12 @@ import java.io.Serializable;
 public class QuestionResponseModel extends Object implements Serializable {
     private String question;
     private String answer;
+    private String imageURL;
 
-    public QuestionResponseModel(String question, String answer){
+    public QuestionResponseModel(String question, String answer, String imageURL){
         this.question = question;
         this.answer = answer;
+        this.imageURL = imageURL;
     }
 
     public String getQuestion() {
@@ -25,11 +27,14 @@ public class QuestionResponseModel extends Object implements Serializable {
         return answer;
     }
 
+    public String getImage() { return imageURL; }
+
     @Override
     public String toString() {
         return "QuestionResponseModel{" +
-                "question='" + question + '\'' +
-                ", answer='" + answer + '\'' +
+                "question= \'" + question + '\'' +
+                ", answer= \'" + answer + '\'' +
+                ", imageURL= \'" + imageURL + "\'" +
                 '}';
     }
 }
