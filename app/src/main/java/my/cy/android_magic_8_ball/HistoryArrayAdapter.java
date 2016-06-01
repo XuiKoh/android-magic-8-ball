@@ -23,6 +23,8 @@ import java.util.ArrayList;
  */
 public class HistoryArrayAdapter extends ArrayAdapter<QuestionResponseModel> {
 
+    ArrayList<ImageModel> imageList = new ArrayList<ImageModel>();
+
     // View lookup cache
     private static class ViewHolder {
         TextView txtViewQuestion;
@@ -51,13 +53,28 @@ public class HistoryArrayAdapter extends ArrayAdapter<QuestionResponseModel> {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        // Populate the data into the template view using the data object
-        new ImageDownloadTask(viewHolder.userImage).execute(history.getImage());
 
+        // Populate the data into the template view using the data object
         viewHolder.txtViewQuestion.setText(history.getQuestion());
         viewHolder.txtViewAnswer.setText(history.getAnswer());
+
+        Boolean matched = matchImage(history.getImage(), viewHolder);
+        if(!matched) {
+            new ImageDownloadTask(viewHolder.userImage).execute(history.getImage());
+        }
+
         // Return the completed view to render on screen
         return convertView;
+    }
+
+    private Boolean matchImage(String imageURL, ViewHolder viewHolder){
+        for(ImageModel image : imageList) {
+            if(imageURL.equals(image.getImageURL())){
+                viewHolder.userImage.setImageBitmap(image.getImageData());
+                return true;
+            }
+        }
+        return false;
     }
 
     private class ImageDownloadTask extends AsyncTask<String, Void, Bitmap> {
@@ -73,6 +90,8 @@ public class HistoryArrayAdapter extends ArrayAdapter<QuestionResponseModel> {
             try {
                 Log.i("Image", params[0]);
                 bitmap = downloadBitmap(params[0]);
+                imageList.add(new ImageModel(params[0], bitmap));
+                //Log.i("LIST", imageList.toString());
             } catch(Exception e){
                 Log.v("Image",e.getLocalizedMessage());
             }
